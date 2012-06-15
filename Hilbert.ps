@@ -1,0 +1,82 @@
+%
+% ヒルベルト曲線を生成する。Hilbert curve
+% gs Hilbert.PS
+% 2011_03_31
+%
+
+
+/dru {
+    n 0 gt
+    {
+        /n n 1 sub def
+        rdl d dru r dru u lur
+        /n n 1 add def
+    } if
+} def
+
+
+/rdl {
+    n 0 gt
+    {
+        /n n 1 sub def
+        dru r rdl d rdl l uld
+        /n n 1 add def
+    } if
+} def
+
+
+/uld {
+    n 0 gt
+    {
+        /n n 1 sub def
+       lur u uld l uld d rdl
+        /n n 1 add def
+    } if
+} def
+
+
+/lur {
+    n 0 gt
+    {
+        /n n 1 sub def
+        uld l lur u lur r dru
+        /n n 1 add def
+    } if
+} def
+
+
+/u {
+    0 1 rlineto
+} def
+
+
+/d {
+    0 -1 rlineto
+} def
+
+
+/l {
+    1 0 rlineto
+} def
+
+
+/r {
+    -1 0 rlineto
+} def
+
+
+%/n 1 def
+/n 7 def
+
+
+gsave
+4 4 scale
+0.05 setlinewidth
+newpath
+140 140 moveto
+dru
+stroke
+grestore
+
+
+% end

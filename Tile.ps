@@ -1,0 +1,87 @@
+%%
+%% エッシャータイル (「魚」のためのもの)
+%% 重ならないが、一次元的にしか伸びていかない。
+%% Tile_2.PSと同じ内容だが、gsave/grestoreを使って簡単にした。
+%% 2011_04_07
+%%
+
+
+/r 0.707106781 def
+
+
+/tri {
+    newpath
+    0 0 moveto
+    1 0 lineto
+    0 1 lineto
+    closepath
+    stroke
+} def
+
+
+/step1 {
+    gsave
+    dup 0 gt
+    {
+        gsave
+        tri
+        0.5 0.5 translate
+        r r scale
+        -45 rotate tri
+        90 rotate tri
+        grestore
+        
+        1 0.5 translate
+        0.5 0.5 scale
+        
+        1 sub dup
+        step1
+        step2
+    }
+    {
+        pop
+    } ifelse
+    grestore
+} def
+
+
+/step2 {
+    gsave
+    dup 0 gt
+    {
+        gsave
+        -90 rotate tri
+        0.5 0.5 translate
+        r r scale
+        45 rotate tri
+        -90 rotate tri
+        grestore
+        
+        1 -0.5 translate
+        0.5 0.5 scale
+        
+        1 sub dup
+        step2
+        step1
+    }
+    {
+        pop
+    } ifelse
+    grestore
+} def
+
+
+gsave
+0.001 setlinewidth
+28.34645669 28.34645669 scale           % cm
+10.5 14.85 translate                    % (center)
+4 4 scale                               % 倍率
+0.001 setlinewidth
+
+
+10 step1
+10 step2
+grestore
+
+
+% end

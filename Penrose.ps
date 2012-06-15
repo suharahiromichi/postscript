@@ -1,0 +1,228 @@
+%
+% Penrose Tile
+% 2011_04_20
+%
+% Prof. Wada's Blog.
+%
+
+
+/black {
+    0 0 0 setrgbcolor
+} def
+
+
+/red {
+    1 0 0 setrgbcolor
+} def
+
+
+/green {
+    0 1 0 setrgbcolor
+} def
+
+
+/blue {
+    0 0 1 setrgbcolor
+} def
+
+
+/xy {
+    2 dict
+    begin
+        /a exch def
+        /l exch def
+        l a cos mul
+        l a sin mul
+    end
+} def
+ 
+/alp 36 def
+/alp2 alp 2 mul def
+/alp3 alp 3 mul def
+/alp4 alp 4 mul def
+/alp5 alp 5 mul def
+/alp6 alp 6 mul def
+/alp7 alp 7 mul def
+/alp8 alp 8 mul def
+/alp9 alp 9 mul def
+
+
+/one 1 def
+/phi 5 sqrt 1 add 2 div def
+/phi1 1 phi div def
+/phi2 phi phi mul def
+/phi3 phi phi mul phi mul def
+/phi4 phi phi mul phi mul phi mul def
+
+
+/kite_base {
+    black
+    0 0 moveto
+    phi2 alp xy lineto                      % phi2 = phi + one
+    phi alp2 neg xy rlineto                 % phi = phi1 + one
+    stroke
+
+
+    blue
+    0 0 phi 0 alp arc                       % phi
+    stroke
+
+
+    red
+    phi2 0 one alp alp2 add 180 arc         % one
+    stroke
+
+
+    green
+    0 0 moveto
+    one 0 lineto
+    stroke
+} def
+
+
+/dart_base {
+    black
+    0 0 moveto
+    phi2 alp xy lineto                      % phi2 = phi + one
+    phi alp2 alp add neg xy rlineto         % phi = phi1 + one
+    stroke
+
+
+    blue
+    0 0 one 0 alp arc                       % one
+    stroke
+
+
+    red
+    phi 0 phi1 alp2 180 arc                 % phi1
+    stroke
+    
+    green
+    0 0 moveto
+    one 0 lineto
+    stroke
+} def
+
+
+%%%%%%%%%%
+
+
+/kite0d {
+    1 dict begin
+    gsave
+    translate rotate
+    /n exch def
+    n 0 le
+    {
+        kite_base
+    }
+    {
+        /n1 n 1 sub def
+        phi1 phi1 scale
+        
+        n1 alp 0 0 dart1d
+        n1 alp3 neg phi3 alp xy kite1d
+        n1 alp3 neg phi3 alp xy kite0d
+    } ifelse
+    grestore
+    end
+} def
+
+
+/kite1d {
+    1 dict begin
+    gsave
+    translate rotate
+    /n exch def
+    n 0 le
+    {
+        1 -1 scale
+        kite_base
+    }
+    {
+        /n n 1 sub def
+        phi1 phi1 scale
+        
+        n alp neg 0 0 dart0d
+        n alp3 phi3 alp neg xy kite0d
+        n alp3 phi3 alp neg xy kite1d
+    } ifelse
+    grestore
+    end
+} def
+    
+
+
+/dart0d {
+    1 dict begin
+    gsave
+    translate rotate    
+    /n exch def
+    n 0 le
+    {
+        dart_base
+    }
+    {
+        /n n 1 sub def
+        phi1 phi1 scale
+        
+        n 0 0 0 kite0d
+        n alp4 neg phi3 alp xy dart0d
+    } ifelse
+    grestore
+    end
+} def
+
+
+/dart1d {
+    1 dict begin
+    gsave
+    translate rotate
+    /n exch def
+    n 0 le
+    {
+        1 -1 scale
+        dart_base
+    }
+    {
+        /n n 1 sub def
+        phi1 phi1 scale
+        
+        n 0 0 0 kite1d
+        n alp4 phi3 alp neg xy dart1d
+    } ifelse
+    grestore
+    end
+} def
+
+
+%%
+gsave
+
+
+{
+    0.01 setlinewidth
+    2.834645669 2.834645669 scale           % mm
+    105 148.5 translate                     % (center)
+    20 20 scale                             % scale
+
+
+    /n 6 def
+    
+    n 0 0 0 kite0d
+    n 0 0 0 kite1d
+    n alp2 0 0 kite0d
+    n alp2 0 0 kite1d
+    n alp4 0 0 kite0d
+    n alp4 0 0 kite1d
+    n alp6 0 0 kite0d
+    n alp6 0 0 kite1d
+    n alp8 0 0 kite0d
+    n alp8 0 0 kite1d
+} exec
+
+
+grestore
+
+
+% end

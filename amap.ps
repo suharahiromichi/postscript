@@ -1,0 +1,115 @@
+%!PS-Adobe-3.0
+% P.40 2.12.4 配列を扱う手続き
+
+/s {
+    pstack
+} def
+
+% [1 2 3 4] {neg} map == [-1 -2 -3 -4]
+/map {
+    6 dict begin
+        /f exch def
+        /ary exch def
+        /n ary length def
+        /ret n array def
+        0 1 n 1 sub {
+            /i exch def
+            /e ary i get def
+            ret i e f put
+        } for
+        ret
+    end
+} def
+
+% [5 6 7] [1 2 3] {sub} map2 == [4 4 4]
+/map2 {
+    8 dict begin
+        /f exch def
+        /ary1 exch def
+        /ary2 exch def
+        /n ary1 length ary2 length min def
+        /ret n array def
+        0 1 n 1 sub {
+            /i exch def
+            /e1 ary1 i get def
+            /e2 ary2 i get def
+            ret i e2 e1 f put
+        } for
+        ret
+    end
+} def
+
+% [8 9 10] [5 6 7] [1 2 3] {max3} map3 == [8 9 10]
+/map3 {
+    10 dict begin
+        /f exch def
+        /ary1 exch def
+        /ary2 exch def
+        /ary3 exch def
+        /n ary1 length ary2 length ary2 length min min def
+        /ret n array def
+        0 1 n 1 sub {
+            /i exch def
+            /e1 ary1 i get def
+            /e2 ary2 i get def
+            /e3 ary3 i get def
+            ret i e3 e2 e1 f put
+        } for
+        ret
+    end
+} def
+
+/max3 {
+    3 dict begin
+    /any3 exch def
+    /any2 exch def
+    /any1 exch def
+    any1 any2 any3 max max
+    end
+} def
+
+% 時刻tでの内部状態		111	110	101	100	011	010	001	000
+% 時刻t+1での中央のセルの内部状態 0	1	0	1	1	0	1	0
+
+/rule90 {
+    3 dict begin
+    /any3 exch def
+    /any2 exch def
+    /any1 exch def
+    1 1 0 any3 eq exch any2 eq and exch any1 eq and
+    1 0 0 any3 eq exch any2 eq and exch any1 eq and
+    0 1 1 any3 eq exch any2 eq and exch any1 eq and
+    0 0 1 any3 eq exch any2 eq and exch any1 eq and or or or
+    {1} {0} ifelse
+    end
+} def
+
+/mka {
+    2 dict begin    
+    /n exch def
+    /n2 n 2 idiv def
+    /a n2 array {null eq {0} {1} ifelse} map def
+    a aload pop
+    1
+    a aload pop
+    2 n2 mul 1 add array astore
+    end
+} def
+
+/ca {
+    6 dict begin
+%   /m [0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0] def
+    /m 100 mka def
+    /n m length def
+    /n1 n 1 sub def
+    
+    n {
+        m
+        
+        /l   m 1 n1 getinterval aload pop 0 n array astore def
+        /r 0 m 0 n1 getinterval aload pop   n array astore def
+        l m r {rule90} map3
+        /m exch def
+    } repeat
+    end
+} def

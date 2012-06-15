@@ -1,0 +1,273 @@
+%%
+%% エッシャータイル (「魚」のためののも)
+%% 終了条件が適切でないため、タイルの重なりが発生してしまっている。
+%%
+%% 2011_04_02
+%%
+
+
+/s 1.0 def                                  % 倍率
+/t 0.05 def
+
+
+/aaa {
+    a
+    /s s r mul def
+    s t gt {
+        kkk
+        hhh
+    }
+    {
+        % 木の葉の場合は、次の点を捨てる。
+        pop pop
+        pop pop
+    } ifelse
+    /s s r div def
+} def
+
+
+/bbb {
+    b
+    /s s r mul def
+    s t gt {
+        hhh
+        iii
+    }
+    {
+        pop pop
+        pop pop
+    } ifelse
+    /s s r div def
+} def
+
+
+/ccc {
+    c
+    /s s r mul def
+    s t gt {
+        iii
+        jjj
+    }
+    {
+        pop pop
+        pop pop
+    } ifelse
+    /s s r div def
+} def
+
+
+/ddd {
+    d
+    /s s r mul def
+    s t gt {
+        jjj
+        kkk
+    }
+    {
+        pop pop
+        pop pop
+    } ifelse
+    /s s r div def
+} def
+
+
+%%%
+
+
+/hhh {
+    h
+    /s s r mul def
+    s t gt {
+        aaa
+        bbb
+    }
+    {
+        pop pop
+        pop pop
+    } ifelse
+    /s s r div def
+} def
+
+
+/iii {
+    i
+    /s s r mul def
+    s t gt {
+        bbb
+        ccc
+    }
+    {
+        pop pop
+        pop pop
+    } ifelse
+    /s s r div def
+} def
+
+
+/jjj {
+    j
+    /s s r mul def
+    s t gt {
+        ccc
+        ddd
+    }
+    {
+        pop pop
+        pop pop
+    } ifelse
+    /s s r div def
+} def
+
+
+/kkk{
+    k
+    /s s r mul def
+    s t gt {
+        ddd
+        aaa
+    }
+    {
+        pop pop
+        pop pop
+    } ifelse
+    /s s r div def
+} def
+
+
+%%%
+
+
+/a {
+    2 copy
+%
+    newpath moveto
+    s 0 rlineto
+    s neg s rlineto
+    closepath
+    stroke
+%
+    exch s 2 div add
+    exch s 2 div add
+    2 copy
+} def
+
+
+/b {
+    2 copy
+%
+    newpath moveto
+    s 0 rlineto
+    s neg s neg rlineto
+    closepath
+    stroke
+%
+    exch s 2 div add
+    exch s 2 div sub
+    2 copy
+} def
+
+
+/c {
+    2 copy
+%
+    newpath moveto
+    s neg 0 rlineto
+    s s neg rlineto
+    closepath
+    stroke
+%
+    exch s 2 div sub
+    exch s 2 div sub
+    2 copy
+} def
+
+
+/d {
+    2 copy
+%
+    newpath moveto
+    s neg 0 rlineto
+    s s rlineto
+    closepath
+    stroke
+%
+    exch s 2 div sub
+    exch s 2 div add
+    2 copy
+} def
+
+
+%%%
+/r 0.707106781 def
+
+
+/h {
+    2 copy
+%
+    newpath
+    moveto
+    r s mul dup rlineto
+    0 r s mul 2 mul neg rlineto
+    closepath
+    stroke
+%
+    exch r s mul add
+    exch
+    2 copy
+} def
+
+
+/i {
+    2 copy
+%
+    newpath moveto
+    r s mul dup neg rlineto
+    r s mul 2 mul neg 0 rlineto
+    closepath
+    stroke
+%
+    r s mul sub
+    2 copy
+} def
+
+
+/j {
+    2 copy
+%
+    newpath moveto
+    r s mul neg dup rlineto
+    0 r s mul 2 mul rlineto
+    closepath
+    stroke
+%
+    exch r s mul sub
+    exch
+    2 copy
+} def
+
+
+/k {
+    2 copy
+%
+    newpath moveto
+    r s mul neg dup neg rlineto
+    r s mul 2 mul 0 rlineto
+    closepath
+    stroke
+%
+    r s mul add
+    2 copy
+} def
+
+
+gsave
+100 100 scale
+0.01 setlinewidth
+3.0 3.0 aaa
+%3.0 3.0 bbb
+%3.0 3.0 ccc
+%3.0 3.0 ddd
+grestore
+
+
+% end

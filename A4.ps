@@ -1,0 +1,70 @@
+%
+% A4サイズの用紙の中央に図形を置く。
+% A4
+% 210×297mm
+% 595×842pt
+% 8.27×11.69inch
+%
+
+
+/tri {
+        newpath
+        0 0 moveto
+        10 20 lineto
+        10 0 lineto
+        0 0 lineto
+        closepath
+} def
+
+
+gsave
+
+
+false
+{
+    0.001 setlinewidth
+    28.34645669 28.34645669 scale           % cm
+    10.5 14.85 translate                    % (center)
+    tri stroke
+    90 rotate
+    tri fill
+} if
+
+
+true
+{
+    0.001 setlinewidth
+    2.834645669 2.834645669 scale           % mm
+    105 148.5 translate                     % (center)
+    tri stroke
+    90 rotate
+    tri fill
+} if
+
+
+false
+{
+    0.001 setlinewidth
+    1 1 scale                               % pt
+    297.5 421 translate                     % (center)
+    tri stroke
+    90 rotate
+    tri fill
+} if
+
+
+false
+{
+    0.001 setlinewidth
+    72 72 scale                             % inch
+    4.135 5.84 translate                    % (center)
+    tri stroke
+    90 rotate
+    tri fill
+} if
+
+
+grestore
+
+
+% end
