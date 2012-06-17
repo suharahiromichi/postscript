@@ -1,0 +1,161 @@
+%%
+%% エッシャータイル (「魚」で埋め尽くした)
+%%
+%% 2011_04_09
+%%
+
+
+/tri {
+    newpath
+    0 0 moveto
+    1 0 lineto
+    0 1 lineto
+    closepath
+    stroke
+} def
+
+
+/dash_stroke {
+      [0.25] 0 setdash
+      stroke
+      [] 0 setdash
+} def
+
+
+/r 0.70711 def
+/s 1.41421 def
+
+
+/fishedge {
+    newpath
+    0.0 0.0 moveto
+    0.7 0.7 lineto
+    1.4 0.5 lineto
+    1.8 0.2 lineto
+    2.4 0.2 lineto
+    3.0 0.0 lineto
+    stroke
+    
+    true
+    {
+        newpath
+        0.0 0.0 moveto
+        3.0 0.0 lineto
+        dash_stroke
+    } if
+} def
+
+
+/fish {
+    gsave
+    0.333333 0.333333 scale
+    
+    fishedge                                % 1
+    
+    90 rotate
+    fishedge                                % 2
+    -90 rotate
+    
+    1.5 1.5 translate
+    1 -1 scale
+    r r scale
+    45 rotate
+    fishedge                                % 3
+    -45 rotate
+%   s s scale
+%   1 -1 scale
+%   -1.5 -1.5 translate
+
+
+%   1.5 1.5 translate
+%   1 -1 scale
+%   r r scale
+    -135 rotate
+    fishedge                                % 4
+    
+    3.0 0.0 moveto
+
+
+    s s scale
+    1 -1 scale
+    -1.5 -1.5 translate
+    
+    grestore
+} def
+
+
+/fish_one_step
+{
+    gsave
+    fish                                    % 1
+
+
+    0.5 0.5 translate
+    -1 1 scale
+    45 rotate
+    r r scale
+    fish                                    % 3
+
+
+    90 rotate
+    fish                                    % 2
+    grestore
+} def
+
+
+/step1 {
+    gsave
+    dup 0 gt
+    {
+        fish_one_step
+        
+        1 0.5 translate
+        0.5 0.5 scale
+        
+        1 sub dup
+        step1
+        step2
+    }
+    {
+        pop
+    } ifelse
+    grestore
+} def
+
+
+/step2 {
+    gsave
+    dup 0 gt
+    {
+        -90 rotate
+        fish_one_step
+        90 rotate
+        
+        1 -0.5 translate
+        0.5 0.5 scale
+        
+        1 sub dup
+        step2
+        step1
+    }
+    {
+        pop
+    } ifelse
+    grestore
+} def
+
+
+gsave
+0.001 setlinewidth
+28.34645669 28.34645669 scale           % cm
+10.5 14.85 translate                    % (center)
+4 4 scale                               % 倍率
+0.001 setlinewidth
+
+
+10 step1
+10 step2
+grestore
+
+
+% end
