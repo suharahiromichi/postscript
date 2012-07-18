@@ -1,0 +1,52 @@
+%!PS-Adobe-3.0
+% Raster Graphics
+% ラスタデータを表示するためのプログラム
+
+0.01 setlinewidth
+5 5 scale
+/time 160 def
+/cont 0 def
+
+/drawcell {
+    newpath
+    cont time moveto
+    1 0 rlineto
+    0 1 rlineto
+    -1 0 rlineto
+    0 -1 rlineto
+    dup
+    setgray fill                        % gray scale (0:White)
+%   1 exch sub setgray fill             % gray scale (1:White)
+%   1 eq {fill} if
+%   1 eq {fill} {stroke} ifelse         % with lattice
+    /cont 1 cont add def         	% global
+} def
+
+/map {
+    6 dict begin
+        /f exch def
+        /ary exch def
+        /n ary length def
+        /ret n array def
+        0 1 n 1 sub {
+            /i exch def
+            /e ary i get def
+            ret i e f put
+        } for
+        ret
+    end
+} def
+
+/dl {
+    {drawcell} map
+    /time time 1 sub def
+} def
+
+% END
+
+% 他のプログラムで生成したラスターデータを追加する。
+% 見たまま、上から下、左から右 (Mathematicaとは異なるかもしれない)
+% sample
+[0 0.5 0 0.5 0 0.5 0 0.5 0 0.5 0 0.5 0 0.5 0 0.5 0 0.5 0 0.5 0 0.5 0 0.5 0 0.5 0 0.5] dl
+[1 0.5 1 0.5 1 0.5 1 0.5 1 0.5 1 0.5 1 0.5 1 0.5 1 0.5 1 0.5 1 0.5 1 0.5 1 0.5 1 0.5] dl
+[0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0] dl
