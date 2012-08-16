@@ -1,0 +1,93 @@
+%!PS-Adobe-3.0
+% シェルピンスキーのガスケットの線分版
+% ハノイの塔の状態遷移図とおなじ形になる。
+% 数学セミナー 2012.09 p.30
+
+% n htl l(n)
+% n次のガスケットの一辺の長さを求める。
+% l(0) = 0
+% l(n) = 2 * l(n - 1) + 1
+/htl {
+    dup
+    0 ne
+    {
+        1 sub
+        htl
+        2 mul
+        1 add
+    } if
+} def
+
+% n hts なし
+% n次のガスケットを描く
+% newpath-closepath-strokeは実行しない。
+/hts {
+    dup
+    0 eq
+    {
+        pop
+    }
+    {
+        0 0 moveto
+
+        % n-1次のガスケットを描く
+        dup
+        1 sub hts
+        1 0 rlineto
+
+        % l(n), 0 に平行移動する。
+        % -120°回転する。
+        dup
+        htl
+        0 translate
+        -120 rotate
+        
+        % n-1次のガスケットを描く
+        dup
+        1 sub hts
+        1 0 rlineto
+        
+        % l(n), 0 に平行移動する。
+        % -120°回転する。
+        dup
+        htl
+        0 translate
+        -120 rotate
+        
+        % n-1次のガスケットを描く
+        dup
+        1 sub hts
+        1 0 rlineto
+
+        % l(n), 0 に平行移動する。
+        % -120°回転する。
+        % もとにもどる。
+        dup
+        htl
+        0 translate
+        -120 rotate
+        
+        % l(n), 0 にペンを移動させる。
+        % n+1次のときに、rlinetoできるように。
+        htl
+        0 moveto
+    } ifelse
+} def
+
+gsave
+0.001 setlinewidth
+28.34645669 28.34645669 scale           % cm
+10.5 14.85 translate                    % (center)
+
+0.05 setlinewidth                           % adjust
+0.0 10.0 translate                          % adjust
+0.3 0.3 scale                               % adjust
+-60 rotate                                  % adjust
+
+newpath
+6 hts
+closepath
+stroke
+grestore
+
+% END
