@@ -2,6 +2,7 @@
 % シェルピンスキーのガスケットの線分版
 % ハノイの塔の状態遷移図とおなじ形になる。
 % 数学セミナー 2012.09 p.30
+% 2012_8_16 @suharahiromichi
 
 % n htl l(n)
 % n次のガスケットの一辺の長さを求める。
@@ -30,42 +31,23 @@
     {
         0 0 moveto
 
-        % n-1次のガスケットを描く
-        dup
-        1 sub hts
-        1 0 rlineto
+        3 {
+            % n-1次のガスケットを描く。
+            % △の左下に描かれる。
+            dup
+            1 sub hts
 
-        % l(n), 0 に平行移動する。
-        % -120°回転する。
-        dup
-        htl
-        0 translate
-        -120 rotate
-        
-        % n-1次のガスケットを描く
-        dup
-        1 sub hts
-        1 0 rlineto
-        
-        % l(n), 0 に平行移動する。
-        % -120°回転する。
-        dup
-        htl
-        0 translate
-        -120 rotate
-        
-        % n-1次のガスケットを描く
-        dup
-        1 sub hts
-        1 0 rlineto
+            % △の底辺の中央の線分が描かれる。
+            1 0 rlineto
 
-        % l(n), 0 に平行移動する。
-        % -120°回転する。
+            % △の右下が左下に移動する。
+            % l(n), 0 に平行移動する。120°回転する。
+            dup
+            htl
+            0 translate
+            120 rotate
+        } repeat
         % もとにもどる。
-        dup
-        htl
-        0 translate
-        -120 rotate
         
         % l(n), 0 にペンを移動させる。
         % n+1次のときに、rlinetoできるように。
@@ -77,12 +59,11 @@
 gsave
 0.001 setlinewidth
 28.34645669 28.34645669 scale           % cm
-10.5 14.85 translate                    % (center)
+%10.5 14.85 translate                   % (center)
 
-0.05 setlinewidth                           % adjust
-0.0 10.0 translate                          % adjust
-0.3 0.3 scale                               % adjust
--60 rotate                                  % adjust
+0.05 setlinewidth                       % adjust
+1.0 1.0 translate                       % adjust
+0.3 0.3 scale                           % adjust
 
 newpath
 6 hts
