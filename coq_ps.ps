@@ -1,0 +1,96 @@
+% 
+% これは、坂口和彦さん著
+% 「Coqによる定理証明 Coqでスタック指向プログラミング」
+% の5章 PostScriptへの変換 のコードを勉強のために抜粋したもので、
+% 配布を目的としたものではありません。
+% 全体のコードが必要な場合は、原書を参照してください。
+% @suharahiromichi
+% 2012_10_03
+%
+
+%
+% 使い方
+%% gs
+%GS> (coq_ps.ps) run
+%GS> {b} {a} cons
+%GS> p
+%
+
+/p 	{pstack} def
+/pt 	{/TRUE =} def
+/pf 	{/FALSE =} def
+
+% 基本的な命令 (「[」の前後はスペースをいれること)
+/cons 	{ [ 3 1 roll /exec cvx exch /exec cvx ] cvx} def
+/quote 	{ [ exch ]  [ exch {} /forall cvx ] cvx} def
+/nop 	{{pop} pop} def
+/snoc 	{exch cons} def
+
+% テスト
+/test_cons {{pt} {pf} cons exec} def        % TRUE FALSE
+/test_snoc {{pt} {pf} snoc exec} def        % FALSE TRUE
+
+% ブール型
+/false 	{nop} def
+/true 	{exch} def
+/not 	{{exch} cons} def
+%/if0 	{quote exch quote cons exch quote cons} def
+/if 	{quote exch quote cons exch quote cons exec exec pop} def
+/execif {if exec} def
+/xor 	{cons} def
+
+% テスト
+/test_t     {{true}         	 {pt} {pf} execif} def % TRUE
+/test_f     {{false}          	 {pt} {pf} execif} def % FALSE
+/test_xorff {{false} {false} xor {pt} {pf} execif} def % FALSE
+/test_xorft {{false} {true}  xor {pt} {pf} execif} def % TRUE
+/test_xortf {{true}  {false} xor {pt} {pf} execif} def % TRUE
+/test_xortt {{true}  {true}  xor {pt} {pf} execif} def % FALSE
+/test_nott  {{true}          not {pt} {pf} execif} def % FALSE
+/test_notf  {{false}         not {pt} {pf} execif} def % TRUE
+
+% 自然数型
+
+/toint		{0 {1 add} 3 2 roll exec} def
+/incr 		{dup quote exch quote cons exch quote cons exec snoc exch} def
+/natquote	{{{nop} {incr} {incr}} exch quote cons exec exec pop} def
+/natunquote	{{{nop} exch} snoc {pop} cons {exec} cons} def
+
+/natq		{ [ exch {{incr} /exec cvx} repeat ] cvx } def
+/nat		{natq natunquote} def
+
+/natqsucc	{{incr} cons} def
+/natsucc	{natquote natqsucc natunquote} def
+/natadd		{exch {natsucc} exch exec} def
+/natmult	{quote {natadd} cons quote snoc {0 nat} snoc exec} def
+/nateven	{{{not}} snoc {true} exch exec} def 		% ここで{ false }
+/natiszero	{{{pop {false}}} snoc {true} exch exec} def 	% ここで{ true }
+/natpred	{{0 nat 0 nat {pop dup natsucc exch}} snoc exec exch pop} def
+/natsub		{{{natpred}} snoc exec} def
+/natle		{natsub natiszero} def
+/nateucl_iter	{quote exch quote cons exch quote cons exch quote cons exec
+        quote dup cons exch quote cons exec
+        quote dup cons exch quote cons exec natle
+        {quote dup cons exch quote cons exec exch natsub quote exch quote cons
+        exch natsucc quote cons exch quote cons exec dup exec}
+        {quote exch quote snoc exch quote cons exch quote cons exec
+        pop exch pop exch} execif} def
+/nateucl	{0 nat {nateucl_iter} dup exec} def
+
+% テスト
+/test_1	{23 nat 14 nat natadd toint ==} def   % 37
+/test_2	{64 nat 31 nat natadd toint ==} def   % 95
+/test_3 {10 nat 10 nat natmult toint ==} def  % 100
+/test_4 {8 nat 13 nat natmult toint ==} def   % 104
+/test_5 {100 nat 33 nat natsub toint ==} def  % 67
+/test_6 {43 nat 12 nat natsub toint ==} def   % 31
+/test_7 {100 nat 7 nat nateucl exch toint == toint ==} def  % 14 2
+/test_8 {150 nat 21 nat nateucl exch toint == toint ==} def % 7 3
+
+/test_a {0 nat natiszero {pt} {pf} execif} def % TRUE
+/test_b {3 nat nateven {pt} {pf} execif} def   % FALSE
+/test_c {3 nat 4 nat natle {pt} {pf} execif} def  % TRUE
+/test_d {3 nat 3 nat natle {pt} {pf} execif} def  % TRUE
+/test_e {3 nat 1 nat natle {pt} {pf} execif} def  % FALSE
+
+% END
