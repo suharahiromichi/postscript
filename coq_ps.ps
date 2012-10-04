@@ -77,8 +77,9 @@
 /natsucc	{natquote natqsucc natunquote} def
 /natadd		{exch {natsucc} exch exec} def
 /natmult	{quote {natadd} cons quote snoc {0 nat} snoc exec} def
-/nateven	{{{not}} snoc {true} exch exec} def 		% ここで{ false }
-/natiszero	{{{pop {false}}} snoc {true} exch exec} def 	% ここで{ true }
+%/nateven	{{{not}} snoc {true} exch exec} def              % ここで{ false }
+/nateven	{{true} exch {{not}} exch cons exec} def
+/natiszero	{{{pop {false}}} exch cons {true} exch exec} def % ここで{ true }
 /natpred	{{0 nat 0 nat {pop dup natsucc exch}} snoc exec exch pop} def
 /natsub		{{{natpred}} snoc exec} def
 /natle		{natsub natiszero} def
@@ -89,7 +90,7 @@
         exch natsucc quote cons exch quote cons exec dup exec}
         {quote exch quote snoc exch quote cons exch quote cons exec
         pop exch pop exch} execif} def
-/nateucl	{0 nat {nateucl_iter} dup exec} def
+/nateucl	{0 nat {nateucl_iter} {nateucl_iter} exec} def
 
 % テスト
 /test_1	{23 nat 14 nat natadd toint ==} def   % 37
@@ -101,8 +102,10 @@
 /test_7 {100 nat 7 nat nateucl exch toint == toint ==} def  % 14 2
 /test_8 {150 nat 21 nat nateucl exch toint == toint ==} def % 7 3
 
-/test_a {0 nat natiszero {pt} {pf} execif} def % TRUE
-/test_b {3 nat nateven {pt} {pf} execif} def   % FALSE
+/test_at {0 nat natiszero {pt} {pf} execif} def   % TRUE
+/test_af {1 nat natiszero {pt} {pf} execif} def   % FALSE
+/test_bt {2 nat nateven {pt} {pf} execif} def     % TRUE
+/test_bf {3 nat nateven {pt} {pf} execif} def     % FALSE
 /test_c {3 nat 4 nat natle {pt} {pf} execif} def  % TRUE
 /test_d {3 nat 3 nat natle {pt} {pf} execif} def  % TRUE
 /test_e {3 nat 1 nat natle {pt} {pf} execif} def  % FALSE
