@@ -20,7 +20,9 @@
 /pt 	{/TRUE =} def
 /pf 	{/FALSE =} def
 
-% 基本的な命令 (「[」の前後はスペースをいれること)
+%
+% 基本的な命令
+%
 /cons 	{ [ 3 1 roll /exec cvx exch /exec cvx ] cvx} def
 /quote 	{ [ exch ]  [ exch {} /forall cvx ] cvx} def
 /nop 	{{pop} pop} def
@@ -30,10 +32,13 @@
 /test_cons {{pt} {pf} cons exec} def        % TRUE FALSE
 /test_snoc {{pt} {pf} snoc exec} def        % FALSE TRUE
 
+%
 % ブール型
+%
 /false 	{nop} def
 /true 	{exch} def
-/not 	{{exch} cons} def
+%/not 	{{exch} cons} def
+/not 	{{true} xor} def                    % coqの証明に近い。
 %/if0 	{quote exch quote cons exch quote cons} def
 /if 	{quote exch quote cons exch quote cons exec exec pop} def
 /execif {if exec} def
@@ -49,17 +54,26 @@
 /test_nott  {{true}          not {pt} {pf} execif} def % FALSE
 /test_notf  {{false}         not {pt} {pf} execif} def % TRUE
 
+%
 % 自然数型
-
+%
+% PostScriptの整数と、自然数の定義の間の変換
+%/nat		{natq natunquote} def
+%/nat		{natq {{nop} exch} snoc {pop} cons {exec} cons} def
+/nat		{{{nop} exch} exch natq cons {pop} cons {exec} cons} def
 /toint		{0 {1 add} 3 2 roll exec} def
+
+% PostScriptの整数と、クオートされた自然数の定義の間の変換
 /incr 		{dup quote exch quote cons exch quote cons exec snoc exch} def
+% {incr} {incr} incr の2段めの値 {{incr} exec {incr} exec}。これは 2 natq とおなじ。
+% incrの方は、{{}}のネストは深くなっていくが、同様に変換できる。
+/natq		{ [ exch {{incr} /exec cvx} repeat ] cvx } def
+/natqsucc	{{incr} cons} def
+
+% 自然数の定義と、クオートされたそれの間の変換
 /natquote	{{{nop} {incr} {incr}} exch quote cons exec exec pop} def
 /natunquote	{{{nop} exch} snoc {pop} cons {exec} cons} def
 
-/natq		{ [ exch {{incr} /exec cvx} repeat ] cvx } def
-/nat		{natq natunquote} def
-
-/natqsucc	{{incr} cons} def
 /natsucc	{natquote natqsucc natunquote} def
 /natadd		{exch {natsucc} exch exec} def
 /natmult	{quote {natadd} cons quote snoc {0 nat} snoc exec} def
